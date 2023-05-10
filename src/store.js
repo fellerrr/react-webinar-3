@@ -1,5 +1,3 @@
-import {getCountText} from "./utils";
-
 /**
  * Хранилище состояния приложения
  */
@@ -49,8 +47,7 @@ class Store {
       list: [...this.state.list, {
         code: Date.now().toString().slice(-6),
         title: 'Новая запись',
-        count: 0,
-        countText: ''
+        count: 0
       }]
     })
   };
@@ -77,7 +74,6 @@ class Store {
         if (item.code === code) {
           item.selected = !item.selected;
           if (item.selected) item.count += 1;
-          item.countText = getCountText(item.count);
         }
         else {
           item.selected = false;
