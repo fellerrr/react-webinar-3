@@ -42,10 +42,11 @@ class Store {
    * Добавление новой записи
    */
   addItem() {
+    const lastCode = this.state.list.length > 0 ? parseInt(this.state.list[this.state.list.length - 1].code) : 0;
     this.setState({
       ...this.state,
       list: [...this.state.list, {
-        code: Date.now().toString().slice(-6),
+        code: (lastCode + 1).toString(),
         title: 'Новая запись',
         count: 0
       }]
