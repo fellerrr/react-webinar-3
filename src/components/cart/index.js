@@ -4,7 +4,7 @@ import './style.css';
 import Head from "../head";
 import List from "../list";
 
-function Cart({list, onDeleteFromCart, setShowCart, cartSum}){
+function Cart({list, onAction, buttonTitle, setShowCart, cartSum}){
   const fromCart=true
   return (
     <div className='Cart'>
@@ -16,7 +16,7 @@ function Cart({list, onDeleteFromCart, setShowCart, cartSum}){
           Закрыть
         </button>
         <Head title='Корзина'/>
-        <List list={list} onDeleteFromCart={onDeleteFromCart} fromCart={fromCart}/>
+        <List list={list} onAction={onAction} buttonTitle={buttonTitle} fromCart={fromCart}/>
         <div className='Cart-sum'>
           Итого: <span className='Cart-sum-num'>{cartSum.toLocaleString('ru-RU')}</span>
         </div>
@@ -31,7 +31,8 @@ List.propTypes = {
   })).isRequired,
   setShowCart: PropTypes.func,
   onDeleteFromCart: PropTypes.func,
-  cartSum:PropTypes.number
+  cartSum: PropTypes.number,
+  buttonTitle: PropTypes.string
 };
 
 List.defaultProps = {

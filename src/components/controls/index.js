@@ -1,33 +1,19 @@
-import React, {useState} from "react";
+import React from "react";
 import PropTypes from 'prop-types';
 import './style.css';
-import Cart from "../cart";
 import {plural} from "../../utils";
 
-function Controls({list, onDeleteFromCart, cartSum}){
-  const [showCart, setShowCart] = useState(false)
-
+function Controls({list, cartSum, setShowCart}){
+  const len = list.length
+  const status = len + " " +
+    plural(len, {one: 'товар', few: 'товара', many: 'товаров'}) + " / " +
+    cartSum.toLocaleString('ru-RU') + " ₽"
   return (
     <div className='Controls'>
       <span>
-        В корзине:
-        {!!list.length &&
-          <span className='Controls-status'>
-            {list.length}{' '}
-            {plural(list.length, {one: 'товар', few: 'товара', many: 'товаров'})}{' '}
-            / {cartSum.toLocaleString('ru-RU')} ₽
-          </span>}
-        {!list.length && <span className='Controls-status'>пусто</span>}
+        В корзине:<span className='Controls-status'>{len > 0 ? status : 'пусто'}</span>
       </span>
       <button onClick={() => setShowCart(true)}>Перейти</button>
-      {showCart &&
-        <Cart
-          list={list}
-          onDeleteFromCart={onDeleteFromCart}
-          setShowCart={setShowCart}
-          cartSum={cartSum}
-        />
-      }
     </div>
   )
 }
@@ -36,8 +22,8 @@ Controls.propTypes = {
   list: PropTypes.arrayOf(PropTypes.shape({
     code: PropTypes.number
   })).isRequired,
-  onDeleteFromCart: PropTypes.func,
-  cartSum:PropTypes.number
+  cartSum:PropTypes.number,
+  setShowCart:PropTypes.func
 };
 
 export default React.memo(Controls);

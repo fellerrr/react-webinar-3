@@ -6,14 +6,10 @@ function Item(props){
   const fromCart = props.fromCart
 
   const callbacks = {
-    onDelete: (e) => {
+    onAction: (e) => {
       e.stopPropagation();
-      props.onDelete(props.item.title);
-    },
-    addToCart: (e) => {
-      e.stopPropagation();
-      props.addToCart(props.item.title);
-    },
+      props.onAction(props.item.title);
+    }
   }
 
   return (
@@ -31,13 +27,9 @@ function Item(props){
         <span> шт</span>
       </div>}
       <div className='Item-actions'>
-        {fromCart && <button onClick={callbacks.onDelete}>
-          Удалить
-        </button>}
-
-        {!fromCart && <button onClick={callbacks.addToCart}>
-          Добавить
-        </button>}
+        <button onClick={callbacks.onAction}>
+          {props.buttonTitle}
+        </button>
       </div>
     </div>
   );
@@ -53,12 +45,12 @@ Item.propTypes = {
   }).isRequired,
   onDelete: PropTypes.func,
   addToCart: PropTypes.func,
+  buttonTitle: PropTypes.string,
   fromCart: PropTypes.bool
 };
 
 Item.defaultProps = {
-  onDelete: () => {},
-  addToCart: () => {},
+  onAction: () => {},
 }
 
 export default React.memo(Item);
