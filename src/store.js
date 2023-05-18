@@ -1,11 +1,11 @@
-import {generateCode} from "./utils";
+import {generateCode2} from "./utils";
 
 /**
  * Хранилище состояния приложения
  */
 class Store {
   constructor(initState = {}) {
-    this.state = initState;
+    this.state = {...initState, cart: []};
     this.listeners = []; // Слушатели изменений состояния
   }
 
@@ -40,48 +40,46 @@ class Store {
     for (const listener of this.listeners) listener();
   }
 
-  /**
-   * Добавление новой записи
-   */
-  addItem() {
-    this.setState({
-      ...this.state,
-      list: [...this.state.list, {code: generateCode(), title: 'Новая запись'}]
-    })
-  };
 
   /**
    * Удаление записи по коду
-   * @param code
+   * @param title
    */
-  deleteItem(code) {
+  deleteItem(title) {
     this.setState({
       ...this.state,
       // Новый список, в котором не будет удаляемой записи
-      list: this.state.list.filter(item => item.code !== code)
+      cart: this.state.cart.filter(item => item.title !== title)
     })
+    console.log('dele', this.state.cart)
   };
 
+
   /**
-   * Выделение записи по коду
-   * @param code
+   * Добавление в корзину
    */
-  selectItem(code) {
-    this.setState({
-      ...this.state,
-      list: this.state.list.map(item => {
-        if (item.code === code) {
-          // Смена выделения и подсчёт
-          return {
-            ...item,
-            selected: !item.selected,
-            count: item.selected ? item.count : item.count + 1 || 1,
-          };
-        }
-        // Сброс выделения если выделена
-        return item.selected ? {...item, selected: false} : item;
-      })
-    })
+  addToCart(title) {
+    const item = this.state.list.find(item => item.title === title);
+    const cartItem = this.state.cart.find(item => item.title === title);
+    if (cartItem) {
+      cartItem.count += 1;
+      this.setState({
+        ...this.state,
+        cart: [...this.state.cart]
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        cart: [...this.state.cart, {...item, code: generateCode2(), count: 1}]
+      });
+    }
+  }
+  getCartTotal() {
+    let total = 0;
+    this.state.cart.forEach(item => {
+      total += item.price * item.count;
+    });
+    return total;
   }
 }
 
