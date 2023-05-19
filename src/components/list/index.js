@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import Item from "../item";
 import './style.css';
+import {memo} from "react";
 
 function List({list, onAction, buttonTitle, fromCart}){
   return (
@@ -33,4 +34,4 @@ List.defaultProps = {
   onAction: () => {},
 }
 
-export default React.memo(List);
+export default memo(List);

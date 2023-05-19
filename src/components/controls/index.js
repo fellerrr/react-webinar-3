@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import './style.css';
 import {plural} from "../../utils";
+import {memo} from "react";
 
 function Controls({list, cartSum, setShowCart}){
   const len = list.length
@@ -25,4 +26,4 @@ Controls.propTypes = {
   setShowCart:PropTypes.func
 };
 
-export default React.memo(Controls);
+export default memo(Controls);

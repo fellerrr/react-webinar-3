@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import './style.css';
 import Head from "../head";
 import List from "../list";
+import {memo} from "react";
 
 function Cart({list, onAction, buttonTitle, setShowCart, cartSum}){
   const fromCart=true
@@ -38,4 +39,4 @@ List.defaultProps = {
   onDeleteFromCart: () => {},
 }
 
-export default React.memo(Cart);
+export default memo(Cart);

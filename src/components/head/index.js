@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import './style.css';
+import {memo} from "react";
 
 function Head({title}){
   return (
@@ -13,4 +14,4 @@ Head.propTypes = {
   title: PropTypes.node,
 };
 
-export default React.memo(Head);
+export default memo(Head);

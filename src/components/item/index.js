@@ -1,5 +1,7 @@
+
 import PropTypes from "prop-types";
 import './style.css';
+import {memo} from "react";
 
 function Item(props){
   const fromCart = props.fromCart
@@ -52,4 +54,4 @@ Item.defaultProps = {
   onAction: () => {},
 }
 
-export default React.memo(Item);
+export default memo(Item);
