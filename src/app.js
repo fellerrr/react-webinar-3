@@ -12,8 +12,8 @@ import item from "./components/item";
  * @returns {React.ReactElement}
  */
 function App({store}) {
-  const list = store.getState().list;
-  const cartList = store.getState().cart;
+  const list = store.getState().list
+  const cartList = store.getState().cart
   const cartSum = store.getState().totalPrice
 
   const [showCart, setShowCart] = useState(false)

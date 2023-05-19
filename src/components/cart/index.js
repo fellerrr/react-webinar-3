@@ -23,7 +23,6 @@ function Cart({list, onAction, buttonTitle, setShowCart, cartSum}){
           list={list}
           onAction={onAction}
           buttonTitle={buttonTitle}
-          fromCart={fromCart}
           itemComponent={ItemCart}
         />
         <div className='Cart-sum'>
