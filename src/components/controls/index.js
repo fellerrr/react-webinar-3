@@ -3,15 +3,14 @@ import './style.css';
 import {plural} from "../../utils";
 import {memo} from "react";
 
-function Controls({list, cartSum, setShowCart}){
-  const len = list.length
-  const status = len + " " +
-    plural(len, {one: 'товар', few: 'товара', many: 'товаров'}) + " / " +
+function Controls({uniqTotal, cartSum, setShowCart}){
+  const status = uniqTotal + " " +
+    plural(uniqTotal, {one: 'товар', few: 'товара', many: 'товаров'}) + " / " +
     cartSum.toLocaleString('ru-RU') + " ₽"
   return (
     <div className='Controls'>
       <span>
-        В корзине:<span className='Controls-status'>{len > 0 ? status : 'пусто'}</span>
+        В корзине:<span className='Controls-status'>{uniqTotal > 0 ? status : 'пусто'}</span>
       </span>
       <button onClick={() => setShowCart(true)}>Перейти</button>
     </div>
@@ -19,9 +18,7 @@ function Controls({list, cartSum, setShowCart}){
 }
 
 Controls.propTypes = {
-  list: PropTypes.arrayOf(PropTypes.shape({
-    code: PropTypes.number
-  })).isRequired,
+  uniqTotal:PropTypes.number,
   cartSum:PropTypes.number,
   setShowCart:PropTypes.func
 };

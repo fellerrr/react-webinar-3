@@ -15,6 +15,7 @@ function App({store}) {
   const list = store.getState().list
   const cartList = store.getState().cart
   const cartSum = store.getState().totalPrice
+  const uniqTotal = store.getState().uniqTotal
 
   const [showCart, setShowCart] = useState(false)
 
@@ -30,7 +31,7 @@ function App({store}) {
   return (
     <PageLayout>
       <Head title='Магазин'/>
-      <Controls list={cartList} cartSum={cartSum} setShowCart={setShowCart}/>
+      <Controls uniqTotal={uniqTotal} cartSum={cartSum} setShowCart={setShowCart}/>
       <List list={list}
             onAction={callbacks.onAddToCart}
             buttonTitle='Добавить'

@@ -5,7 +5,7 @@ import {generateCode2} from "./utils";
  */
 class Store {
   constructor(initState = {}) {
-    this.state = { ...initState, cart: [], totalQuantity: 0, totalPrice: 0 };
+    this.state = { ...initState, cart: [], uniqTotal: 0, totalPrice: 0 };
     this.listeners = []; // Слушатели изменений состояния
   }
 
@@ -47,8 +47,8 @@ class Store {
    */
   deleteItem(title) {
     const updatedCart = this.state.cart.filter(item => item.title !== title);
-    const { totalQuantity, totalPrice } = this.calculateTotal(updatedCart);
-    this.setState({...this.state, cart: updatedCart, totalQuantity, totalPrice})
+    const { uniqTotal, totalPrice } = this.calculateTotal(updatedCart);
+    this.setState({...this.state, cart: updatedCart, uniqTotal, totalPrice})
   }
 
 
@@ -73,14 +73,14 @@ class Store {
         count: updatedCart[cartItemIndex].count + 1
       }
       // вычисляем количество и общую сумму
-      const { totalQuantity, totalPrice } = this.calculateTotal(updatedCart)
+      const { uniqTotal, totalPrice } = this.calculateTotal(updatedCart)
       // обновляем State
-      this.setState({...this.state, cart: updatedCart, totalQuantity, totalPrice})
+      this.setState({...this.state, cart: updatedCart, uniqTotal, totalPrice})
     } else {
       const newCartItem = { ...item, code: generateCode2(), count: 1 }
       const updatedCart = [...this.state.cart, newCartItem]
-      const { totalQuantity, totalPrice } = this.calculateTotal(updatedCart)
-      this.setState({...this.state, cart: updatedCart, totalQuantity, totalPrice})
+      const { uniqTotal, totalPrice } = this.calculateTotal(updatedCart)
+      this.setState({...this.state, cart: updatedCart, uniqTotal, totalPrice})
     }
   }
 
@@ -89,14 +89,14 @@ class Store {
    * @param cart
    */
   calculateTotal(cart) {
-    let totalQuantity = 0;
     let totalPrice = 0;
+    let uniqTotal = 0
 
     for (const item of cart) {
-      totalQuantity += item.count;
+      uniqTotal += 1
       totalPrice += item.price * item.count;
     }
-    return { totalQuantity, totalPrice };
+    return { uniqTotal, totalPrice };
   }
 }
 
