@@ -5,7 +5,7 @@ import {generateCode2} from "./utils";
  */
 class Store {
   constructor(initState = {}) {
-    this.state = {...initState, cart: []};
+    this.state = { ...initState, cart: [], totalQuantity: 0, totalPrice: 0 };
     this.listeners = []; // Слушатели изменений состояния
   }
 
@@ -42,44 +42,61 @@ class Store {
 
 
   /**
-   * Удаление записи по коду
-   * @param title
+   * Удаление записи из корзины по названию
+   * @param title {string}
    */
   deleteItem(title) {
-    this.setState({
-      ...this.state,
-      // Новый список, в котором не будет удаляемой записи
-      cart: this.state.cart.filter(item => item.title !== title)
-    })
-    console.log('dele', this.state.cart)
-  };
+    const updatedCart = this.state.cart.filter(item => item.title !== title);
+    const { totalQuantity, totalPrice } = this.calculateTotal(updatedCart);
+    this.setState({...this.state, cart: updatedCart, totalQuantity, totalPrice})
+  }
 
 
   /**
    * Добавление в корзину
+   * @param title {string}
    */
   addToCart(title) {
-    const item = this.state.list.find(item => item.title === title);
-    const cartItem = this.state.cart.find(item => item.title === title);
-    if (cartItem) {
-      cartItem.count += 1;
-      this.setState({
-        ...this.state,
-        cart: [...this.state.cart]
-      });
+    // находим товар по названию в списке
+    const item = this.state.list.find(item => item.title === title)
+    // находим индес массива в списке корзины, если есть
+    const cartItemIndex = this.state.cart.findIndex(item => item.title === title)
+    // если индекс найден найден
+    if (cartItemIndex !== -1) {
+      // создаем новый список на основе текущей корзины
+      const updatedCart = [...this.state.cart];
+      // берем товар из этого списка по индексу
+      updatedCart[cartItemIndex] = {
+        // записываем в него все что было
+        ...updatedCart[cartItemIndex],
+        // меняем только количество (+1)
+        count: updatedCart[cartItemIndex].count + 1
+      }
+      // вычисляем количество и общую сумму
+      const { totalQuantity, totalPrice } = this.calculateTotal(updatedCart)
+      // обновляем State
+      this.setState({...this.state, cart: updatedCart, totalQuantity, totalPrice})
     } else {
-      this.setState({
-        ...this.state,
-        cart: [...this.state.cart, {...item, code: generateCode2(), count: 1}]
-      });
+      const newCartItem = { ...item, code: generateCode2(), count: 1 }
+      const updatedCart = [...this.state.cart, newCartItem]
+      const { totalQuantity, totalPrice } = this.calculateTotal(updatedCart)
+      this.setState({...this.state, cart: updatedCart, totalQuantity, totalPrice})
     }
   }
-  getCartTotal() {
-    let total = 0;
-    this.state.cart.forEach(item => {
-      total += item.price * item.count;
-    });
-    return total;
+
+  /**
+   * Функция подсчета количества и общей суммы
+   * @param cart
+   */
+  calculateTotal(cart) {
+    let totalQuantity = 0;
+    let totalPrice = 0;
+
+    for (const item of cart) {
+      totalQuantity += item.count;
+      totalPrice += item.price * item.count;
+    }
+    return { totalQuantity, totalPrice };
   }
 }
 

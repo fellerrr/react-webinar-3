@@ -4,6 +4,7 @@ import Controls from "./components/controls";
 import Head from "./components/head";
 import PageLayout from "./components/page-layout";
 import Cart from "./components/cart";
+import item from "./components/item";
 
 /**
  * Приложение
@@ -13,19 +14,17 @@ import Cart from "./components/cart";
 function App({store}) {
   const list = store.getState().list;
   const cartList = store.getState().cart;
-  const cartSum = store.getCartTotal()
+  const cartSum = store.getState().totalPrice
 
   const [showCart, setShowCart] = useState(false)
 
   const callbacks = {
     onDeleteFromCart: useCallback((title) => {
       store.deleteItem(title);
-      store.getCartTotal()
     }, [store]),
 
     onAddToCart: useCallback((title) => {
       store.addToCart(title)
-      store.getCartTotal()
     }, [store]),
   }
   return (
@@ -35,6 +34,7 @@ function App({store}) {
       <List list={list}
             onAction={callbacks.onAddToCart}
             buttonTitle='Добавить'
+            itemComponent={item}
       />
       {showCart &&
         <Cart
