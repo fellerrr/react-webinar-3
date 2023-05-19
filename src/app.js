@@ -40,7 +40,6 @@ function App({store}) {
         <Cart
           list={cartList}
           onAction={callbacks.onDeleteFromCart}
-          buttonTitle='Удалить'
           setShowCart={setShowCart}
           cartSum={cartSum}
         />

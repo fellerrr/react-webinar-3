@@ -5,8 +5,7 @@ import List from "../list";
 import {memo} from "react";
 import ItemCart from "../item-cart";
 
-function Cart({list, onAction, buttonTitle, setShowCart, cartSum}){
-  const fromCart=true
+function Cart({list, onAction, setShowCart, cartSum}){
   return (
     <div className='Cart'>
       <div className='Cart-container'>
@@ -22,7 +21,7 @@ function Cart({list, onAction, buttonTitle, setShowCart, cartSum}){
         <List
           list={list}
           onAction={onAction}
-          buttonTitle={buttonTitle}
+          buttonTitle='Удалить'
           itemComponent={ItemCart}
         />
         <div className='Cart-sum'>
@@ -40,7 +39,6 @@ List.propTypes = {
   setShowCart: PropTypes.func,
   onDeleteFromCart: PropTypes.func,
   cartSum: PropTypes.number,
-  buttonTitle: PropTypes.string
 };
 
 List.defaultProps = {
