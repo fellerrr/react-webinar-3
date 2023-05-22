@@ -19,7 +19,7 @@ function App({store}) {
   const cartSum = store.getState().totalPrice
   const uniqTotal = store.getState().uniqTotal
 
-  const [showModal, setShowModal] = useState(false)
+  const [showCart, setShowCart] = useState(false)
 
   const callbacks = {
     onDeleteFromCart: useCallback((title) => {
@@ -33,14 +33,14 @@ function App({store}) {
   return (
     <PageLayout>
       <Head title='Магазин'/>
-      <Controls uniqTotal={uniqTotal} cartSum={cartSum} setShowCart={setShowModal}/>
+      <Controls uniqTotal={uniqTotal} cartSum={cartSum} setShowCart={setShowCart}/>
       <List list={list}
             onAction={callbacks.onAddToCart}
             buttonTitle='Добавить'
             itemComponent={item}
       />
-      {showModal &&
-        <Modal setShowModal={setShowModal}>
+      {showCart &&
+        <Modal setShowModal={setShowCart}>
           <Head title='Корзина' style={{marginBottom: '70px'}}/>
           <List
             list={cartList}
