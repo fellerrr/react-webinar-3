@@ -12,21 +12,23 @@ function Item(props){
   return (
     <div className={'Item'}>
       <div className='Item-code'>{props.item.code}</div>
-      <div className='Item-title'>
+      <div className='ItemCart-title'>
         {props.item.title}
       </div>
-      <div className='Item-price'>
-        <span>{props.item.price.toLocaleString('ru-RU')}</span>
-        <span> ₽</span>
-      </div>
-      <div className='Item-count'>
-        <span>{props.item.count}</span>
-        <span> шт</span>
-      </div>
-      <div className='Item-actions'>
-        <button onClick={callbacks.onAction}>
-          {props.buttonTitle}
-        </button>
+      <div className='ItemCart-right'>
+        <div className='ItemCart-price'>
+          <span>{props.item.price.toLocaleString('ru-RU')}</span>
+          <span> ₽</span>
+        </div>
+        <div className='ItemCart-count'>
+          <span>{props.item.count}</span>
+          <span> шт</span>
+        </div>
+        <div className='ItemCart-actions'>
+          <button onClick={callbacks.onAction}>
+            {props.buttonTitle}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -3,8 +3,10 @@ import List from "./components/list";
 import Controls from "./components/controls";
 import Head from "./components/head";
 import PageLayout from "./components/page-layout";
-import Cart from "./components/cart";
 import item from "./components/item";
+import Modal from "./components/modal";
+import ItemCart from "./components/item-cart";
+import Total from "./components/total";
 
 /**
  * Приложение
@@ -17,7 +19,7 @@ function App({store}) {
   const cartSum = store.getState().totalPrice
   const uniqTotal = store.getState().uniqTotal
 
-  const [showCart, setShowCart] = useState(false)
+  const [showModal, setShowModal] = useState(false)
 
   const callbacks = {
     onDeleteFromCart: useCallback((title) => {
@@ -31,19 +33,23 @@ function App({store}) {
   return (
     <PageLayout>
       <Head title='Магазин'/>
-      <Controls uniqTotal={uniqTotal} cartSum={cartSum} setShowCart={setShowCart}/>
+      <Controls uniqTotal={uniqTotal} cartSum={cartSum} setShowCart={setShowModal}/>
       <List list={list}
             onAction={callbacks.onAddToCart}
             buttonTitle='Добавить'
             itemComponent={item}
       />
-      {showCart &&
-        <Cart
-          list={cartList}
-          onAction={callbacks.onDeleteFromCart}
-          setShowCart={setShowCart}
-          cartSum={cartSum}
-        />
+      {showModal &&
+        <Modal setShowModal={setShowModal}>
+          <Head title='Корзина' style={{marginBottom: '70px'}}/>
+          <List
+            list={cartList}
+            onAction={callbacks.onDeleteFromCart}
+            buttonTitle='Удалить'
+            itemComponent={ItemCart}
+          />
+          <Total cartSum={cartSum}/>
+        </Modal>
       }
     </PageLayout>
   );

@@ -14,28 +14,32 @@
   padding: 20px 10px 20px 20px;
 }
 
-.Item-title {
-  width: 90%;
+.ItemCart-title {
+  width: 70%;
   padding: 20px 10px;
 }
-
-.Item-price {
+.ItemCart-right {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-right: 24px;
-  gap: 4px;
-}
-.Item-count {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-right: 24px;
-  margin-left: 60px;
-  gap: 4px;
+  gap: 10px;
+  width: 30%;
 }
 
-.Item-actions {
+.ItemCart-price {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+  width: 20%;
+}
+.ItemCart-count {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 40%;
+  gap: 4px;
+}
+
+.ItemCart-actions {
   display: flex;
   justify-content: flex-end;
   padding: 20px 20px 20px 10px;
