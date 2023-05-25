@@ -15,6 +15,8 @@ class Basket extends StoreModule {
    * @param _id Код товара
    */
   addToBasket(_id) {
+    console.log('i am try starting')
+    console.log('my id', _id)
     let sum = 0;
     // Ищем товар в корзине, чтобы увеличить его количество
     let exist = false;
@@ -27,7 +29,7 @@ class Basket extends StoreModule {
       sum += result.price * result.amount;
       return result;
     });
-
+    console.log('my list', list)
     if (!exist) {
       // Поиск товара в каталоге, чтобы его добавить в корзину.
       // @todo В реальном приложении будет запрос к АПИ вместо поиска по состоянию.
