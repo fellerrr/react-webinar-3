@@ -1,8 +1,5 @@
 import React, {memo} from 'react';
 import {numberFormat} from "../../utils";
-import Menu from "../menu";
-import Head from "../head";
-import PageOptions from "../page-optoins";
 
 const DetailProduct = ({data, addToBasket}) => {
   const itemId = data._id
