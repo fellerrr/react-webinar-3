@@ -1,7 +1,8 @@
 import React from 'react';
 import './style.css';
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination = ({ currentPage, onPageChange, totalPages }) => {
+
   const getPageNumbers = () => {
     const pageNumbers = [];
     if (totalPages <= 3) {

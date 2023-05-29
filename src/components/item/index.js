@@ -1,10 +1,10 @@
-import {memo, useState} from "react";
+import {memo} from "react";
 import PropTypes from "prop-types";
 import {cn as bem} from '@bem-react/classname';
 import {numberFormat} from "../../utils";
 import './style.css';
-import { Routes, Route, Link } from 'react-router-dom';
-import Detail from "../../app/detail";
+import { Link } from 'react-router-dom';
+
 
 function Item(props){
 
@@ -16,10 +16,11 @@ function Item(props){
 
   return (
     <div className={cn()}>
-      {/*<div className={cn('code')}>{props.item._id}</div>*/}
-      {/*<Link to="/detail" className={cn('title')}>*/}
-      {/*  {props.item.title}*/}
-      <Link to={`/detail/${props.item._id}`} className={cn('title')}>
+      {/*<div className={cn('title')}>{props.item.title}</div>*/}
+      {/*<div className={cn('title')}>*/}
+      {/*  {props.url ? <Link to={props.url}>{props.item.title}</Link> : props.item.title}*/}
+      {/*</div>*/}
+      <Link to={props.detailUrl} className="Item-title">
         {props.item.title}
       </Link>
       <div className={cn('actions')}>

@@ -1,37 +1,32 @@
-import {memo, useCallback, useEffect, useState} from 'react';
+import {memo, useCallback, useEffect} from 'react';
 import Item from "../../components/item";
 import PageLayout from "../../components/page-layout";
 import List from "../../components/list";
 import useStore from "../../store/use-store";
 import useSelector from "../../store/use-selector";
 import Pagination from "../../components/pagination";
-
+import Menu from "../../components/menu";
+import Head from "../../components/head";
 
 function Main() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-
   const store = useStore();
-
-  useEffect(() => {
-    const limit = 10;
-    const skip = (currentPage - 1) * limit;
-    store.actions.catalog.load(limit, skip)
-      .then((totalCount) => {
-        const totalPages = Math.ceil(totalCount / limit);
-        setTotalPages(totalPages);
-      })
-      .catch((error) => {
-        console.log(error)
-      });
-  }, [currentPage]);
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
-
   const select = useSelector(state => ({
     list: state.catalog.list,
+    count: state.catalog.count,
+    currentPage: state.catalog.currentPage
   }));
+  useEffect(() => {
+    try {
+      store.actions.catalog.load()
+    }
+    catch (error){
+      console.log(error)
+    }
+  }, [select.currentPage, select.count]);
+  const handlePageChange = (page) => {
+    store.actions.catalog.setCurrentPage(page);
+  };
+
 
   const callbacks = {
     // Добавление в корзину
@@ -40,15 +35,24 @@ function Main() {
   }
 
   const renders = {
-    item: useCallback((item) => {
-      return <Item item={item} onAdd={callbacks.addToBasket}/>
-    }, [callbacks.addToBasket]),
+    // item: useCallback((item) => {
+    //   return <Item item={item} onAdd={callbacks.addToBasket}/>
+    // }, [callbacks.addToBasket]),
+    renderItem: useCallback(
+      (item) => {
+        const detailUrl = `/detail/${item._id}`;
+        return <Item item={item} onAdd={callbacks.addToBasket} detailUrl={detailUrl}/>
+      },
+      [callbacks.addToBasket]
+    )
   };
 
   return (
     <PageLayout>
-      <List list={select.list} renderItem={renders.item}/>
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+      <Head title='Магазин'/>
+      <Menu/>
+      <List list={select.list} renderItem={renders.renderItem}/>
+      <Pagination currentPage={select.currentPage} totalPages={select.count} onPageChange={handlePageChange} />
     </PageLayout>
   );
 }
