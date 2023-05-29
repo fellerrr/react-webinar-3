@@ -20,6 +20,21 @@
 .pagination span:hover{
     background: #E1E1E1;
 }
+
+.pagination a{
+    font-weight: 400;
+    font-size: 16px;
+    text-align: center;
+    padding: 2px 6px 0 6px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    text-decoration: none;
+    color: black;
+
+}
+.pagination a:hover{
+    background: #E1E1E1;
+}
 .active{
     background: #0087E9;
     color: white;

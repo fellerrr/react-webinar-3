@@ -2,6 +2,7 @@ import React, {memo} from 'react';
 import {numberFormat} from "../../utils";
 import Menu from "../menu";
 import Head from "../head";
+import PageOptions from "../page-optoins";
 
 const DetailProduct = ({data, addToBasket}) => {
   const itemId = data._id
@@ -11,8 +12,6 @@ const DetailProduct = ({data, addToBasket}) => {
   const nameCategory = category ? category.title : " ";
   return (
     <>
-      <Head title={data.title}/>
-      <Menu/>
       <div className='details'>
         <p className='description'>{description}</p>
         <p className='country'>Страна производитель: <span>{country} ({countryCode})</span></p>

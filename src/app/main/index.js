@@ -7,11 +7,15 @@ import useSelector from "../../store/use-selector";
 import Pagination from "../../components/pagination";
 import Menu from "../../components/menu";
 import Head from "../../components/head";
+import BasketTool from "../../components/basket-tool";
+import PageOptions from "../../components/page-optoins";
 
 function Main() {
   const store = useStore();
   const select = useSelector(state => ({
     list: state.catalog.list,
+    amount: state.basket.amount,
+    sum: state.basket.sum,
     count: state.catalog.count,
     currentPage: state.catalog.currentPage
   }));
@@ -31,13 +35,10 @@ function Main() {
   const callbacks = {
     // Добавление в корзину
     addToBasket: useCallback(_id => store.actions.basket.addToBasket(_id), [store]),
-
+    openModalBasket: useCallback(() => store.actions.modals.open('basket'), [store]),
   }
 
   const renders = {
-    // item: useCallback((item) => {
-    //   return <Item item={item} onAdd={callbacks.addToBasket}/>
-    // }, [callbacks.addToBasket]),
     renderItem: useCallback(
       (item) => {
         const detailUrl = `/detail/${item._id}`;
@@ -50,7 +51,8 @@ function Main() {
   return (
     <PageLayout>
       <Head title='Магазин'/>
-      <Menu/>
+      <PageOptions onOpen={callbacks.openModalBasket} amount={select.amount}
+                  sum={select.sum}/>
       <List list={select.list} renderItem={renders.renderItem}/>
       <Pagination currentPage={select.currentPage} totalPages={select.count} onPageChange={handlePageChange} />
     </PageLayout>
