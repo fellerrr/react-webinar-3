@@ -33,3 +33,93 @@ export function codeGenerator(start = 0) {
 export function numberFormat(value, locale = 'ru-RU', options = {}) {
   return new Intl.NumberFormat(locale, options).format(value);
 }
+
+/**
+ * Форматирование списка категорий
+ * @returns {Array}
+ */
+// function flattenArray(arr) {
+//   let flattened = [];
+//   for (const obj of arr) {
+//     const { children, ...rest } = obj;
+//     flattened.push(rest);
+//     if (children && children.length > 0) {
+//       flattened = flattened.concat(flattenArray(children));
+//     }
+//   }
+//   return flattened;
+// }
+// export function formatCategory(arr) {
+//   const hash = {};
+//   const result = [];
+//
+//   for (const obj of arr) {
+//     hash[obj._id] = obj;
+//     obj.children = [];
+//   }
+//
+//   for (const obj of arr) {
+//     if (obj.parent) {
+//       hash[obj.parent._id].children.push(obj);
+//     } else {
+//       result.push(obj);
+//     }
+//   }
+//
+//   const traverse = (obj, level) => {
+//     obj.title = "- ".repeat(level) + obj.title;
+//     for (const child of obj.children) {
+//       traverse(child, level + 1);
+//     }
+//   }
+//
+//   for (const obj of result) {
+//     traverse(obj, 0);
+//   }
+//
+//   return flattenArray(result);
+// }
+
+function flattenCategoryArray(categories) {
+  let flattened = [];
+
+  for (const category of categories) {
+    const { children, ...rest } = category;
+    flattened.push(rest);
+    if (children && children.length > 0) {
+      flattened = flattened.concat(flattenCategoryArray(children));
+    }}
+
+  return flattened;
+}
+
+export function formatCategories(categories) {
+  const categoryMap = {};
+  const formattedCategories = [];
+
+  for (const category of categories) {
+    categoryMap[category._id] = category;
+    category.children = [];
+  }
+
+  for (const category of categories) {
+    if (category.parent) {
+      categoryMap[category.parent._id].children.push(category);
+    } else {
+      formattedCategories.push(category);
+    }
+  }
+
+  const traverseCategories = (category, level) => {
+    category.title = "- ".repeat(level) + category.title;
+    for (const child of category.children) {
+      traverseCategories(child, level + 1);
+    }
+  }
+
+  for (const category of formattedCategories) {
+    traverseCategories(category, 0);
+  }
+
+  return flattenCategoryArray(formattedCategories);
+}

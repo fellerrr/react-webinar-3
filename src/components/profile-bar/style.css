@@ -1,0 +1,19 @@
+.profile{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 20px ;
+}
+.profile button{
+    margin-left: 22px;
+}
+.profile-name{
+    font-family: 'Arial', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 15px;
+    text-decoration-line: underline;
+
+    color: #0087E9;
+}
