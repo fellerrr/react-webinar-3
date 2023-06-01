@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import ProfileBar from "../../components/profile-bar";
 import Head from "../../components/head";
 import LocaleSelect from "../../containers/locale-select";
@@ -8,9 +8,12 @@ import ProfileInfo from "../../components/profile-info";
 import useSelector from "../../hooks/use-selector";
 import useStore from "../../hooks/use-store";
 import { Navigate } from 'react-router-dom';
+import useTranslate from "../../hooks/use-translate";
 
 const  Profile = () => {
   const store = useStore();
+  const {t} = useTranslate();
+
 
   const select = useSelector(state => ({
     user: state.user.data,
@@ -19,9 +22,13 @@ const  Profile = () => {
   }));
 
   const callbacks = {
-    onLogout: useCallback(() => store.actions.user.logout(), [store])
+    onLogout: useCallback(() => store.actions.user.logout(), [store]),
+
   }
 
+  // useEffect(()=>{
+  //
+  // },[select.login])
   if (!select.login) {
     return <Navigate to="/login" />;
   }
@@ -29,8 +36,7 @@ const  Profile = () => {
   return (
     <PageLayout>
       <ProfileBar user={select.user} login={select.login} onLogout={callbacks.onLogout}/>
-      {/*<Head title={t('title')}>*/}
-      <Head title='Магазин'>
+      <Head title={t('title')}>
         <LocaleSelect/>
       </Head>
       <Navigation />

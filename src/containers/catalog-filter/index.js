@@ -35,7 +35,6 @@ function CatalogFilter() {
   if (select.categories){
     const newArray = JSON.parse(JSON.stringify(select.categories));
     formattedCategory = formatCategories(newArray);
-    console.log('c chertami',formattedCategory);
   }
 
   const options = {
@@ -60,10 +59,6 @@ function CatalogFilter() {
     }, [formattedCategory]),
 
   }
-
-
-
-
 
   const {t} = useTranslate();
 

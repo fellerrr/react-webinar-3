@@ -10,10 +10,17 @@ const ProfileBar = ({user, login, onLogout}) => {
   const title = login ? 'Выход' : 'Вход'
   return (
     <div className='profile'>
-      {login && <Link to='/profile'><span className='profile-name'>{name}</span></Link>}
-      <Link to='/login'>
-        <button onClick={login ? onLogout : null}>{title}</button>
-      </Link>
+      {login && <>
+        <Link to='/profile'><span className='profile-name'>{name}</span></Link>
+        <Link to='/'>
+          <button onClick={onLogout}>{title}</button>
+        </Link>
+      </>
+        }
+      {!login && <Link to='/login'>
+                    <button>{title}</button>
+                  </Link>
+      }
     </div>
   );
 };
