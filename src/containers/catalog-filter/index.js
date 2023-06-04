@@ -5,20 +5,17 @@ import useSelector from "../../hooks/use-selector";
 import Select from "../../components/select";
 import Input from "../../components/input";
 import SideLayout from "../../components/side-layout";
-import {formatCategories} from "../../utils";
 
 function CatalogFilter() {
 
   const store = useStore();
-
-  let formattedCategory = []
 
   const select = useSelector(state => ({
     sort: state.catalog.params.sort,
     query: state.catalog.params.query,
     category: state.catalog.params.category,
 
-    categories: state.catalog.categories
+    categories: state.categories.categories
   }));
 
   const callbacks = {
@@ -32,11 +29,6 @@ function CatalogFilter() {
     onReset: useCallback(() => store.actions.catalog.resetParams(), [store]),
   };
 
-  if (select.categories){
-    const newArray = JSON.parse(JSON.stringify(select.categories));
-    formattedCategory = formatCategories(newArray);
-  }
-
   const options = {
     sort: useMemo(() => ([
       {value: 'order', title: 'По порядку'},
@@ -45,10 +37,10 @@ function CatalogFilter() {
       {value: 'edition', title: 'Древние'},
     ]), []),
     categories: useMemo(() => {
-      if (formattedCategory) {
+      if (select.categories) {
         return [
           { key: 'all', value: '', title: 'Все' },
-          ...formattedCategory.map(category => ({
+          ...select.categories.map(category => ({
             key: category._id,
             value: category._id,
             title: category.title,
@@ -56,18 +48,17 @@ function CatalogFilter() {
         ];
       }
       return [{ key: 'all', value: '', title: 'Все' }];
-    }, [formattedCategory]),
-
+    }, [select.categories]),
   }
 
   const {t} = useTranslate();
 
   return (
     <SideLayout padding='medium'>
-      <Select options={options.categories} value={select.category} onChange={callbacks.onSortCategory}/>
-      <Select options={options.sort} value={select.sort} onChange={callbacks.onSort}/>
+      <Select options={options.categories} value={select.category} onChange={callbacks.onSortCategory} theme='medium'/>
+      <Select options={options.sort} value={select.sort} onChange={callbacks.onSort} theme='semi-medium'/>
       <Input value={select.query} onChange={callbacks.onSearch} placeholder={'Поиск'}
-             delay={1000}/>
+             delay={1000} theme='big'/>
       <button onClick={callbacks.onReset}>{t('filter.reset')}</button>
     </SideLayout>
   )

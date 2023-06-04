@@ -1,6 +1,6 @@
 import { cn as bem } from '@bem-react/classname';
 import PropTypes from "prop-types";
-import React from 'react';
+import React, {memo} from 'react';
 import Input from '../input';
 import './style.css';
 
@@ -8,15 +8,15 @@ function FormLogin(props) {
   const cn = bem('FormLogin');
 
   return (
-    <div className={cn()}>
+    <form className={cn()} onSubmit={props.onSubmit}>
       <div className={cn('title')}>{props.t('login.title')}</div>
       <div className={cn('label')}>{props.t('login.login')}</div>
       <Input type="text" onChange={value => props.onUsernameChange(value)} value='' />
       <div className={cn('label')}>{props.t('login.password')}</div>
       <Input type="password" onChange={value => props.onPasswordChange(value)} value='' />
-      {props.error ? <div className={cn('error')}>{props.error}</div> : null}
-      <button className={cn('submit')} onClick={props.onSubmit}>{props.t('login.enter')}</button>
-    </div>
+      {props.error && <div className={cn('error')}>{props.error}</div>}
+      <button className={cn('submit')}>{props.t('login.enter')}</button>
+    </form>
   );
 };
 
@@ -36,4 +36,4 @@ FormLogin.defaultProps = {
   t: (text) => text
 }
 
-export default React.memo(FormLogin);
+export default memo(FormLogin);

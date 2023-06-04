@@ -9,33 +9,29 @@ import useSelector from "../../hooks/use-selector";
 import useStore from "../../hooks/use-store";
 import { Navigate } from 'react-router-dom';
 import useTranslate from "../../hooks/use-translate";
+import ProfileSection from "../../containers/profile-bar";
 
 const  Profile = () => {
   const store = useStore();
   const {t} = useTranslate();
 
+  useEffect(()=>{
+    store.actions.user.checkAuth();
+    store.actions.profile.load();
+  },[])
 
   const select = useSelector(state => ({
-    user: state.user.data,
-    login: state.user.login,
-    waiting: state.user.waiting,
+    isLogin: state.user.authorized,
+    user: state.profile.data,
   }));
 
-  const callbacks = {
-    onLogout: useCallback(() => store.actions.user.logout(), [store]),
-
-  }
-
-  // useEffect(()=>{
-  //
-  // },[select.login])
-  if (!select.login) {
+  if (!select.isLogin) {
     return <Navigate to="/login" />;
   }
 
   return (
     <PageLayout>
-      <ProfileBar user={select.user} login={select.login} onLogout={callbacks.onLogout}/>
+      <ProfileSection/>
       <Head title={t('title')}>
         <LocaleSelect/>
       </Head>

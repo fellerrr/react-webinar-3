@@ -9,36 +9,38 @@ import {useCallback, useEffect} from "react";
 import useStore from "../../hooks/use-store";
 import {useNavigate} from "react-router-dom";
 import useSelector from "../../hooks/use-selector";
+import useInit from "../../hooks/use-init";
 
 const Login = () => {
   const store = useStore();
   const {t} = useTranslate();
   const navigate = useNavigate();
 
+  useEffect(()=>{
+    store.actions.login.clearForm();
+    store.actions.user.checkAuth();
+  },[])
+
   const select = useSelector(state => ({
-    success: state.login.success,
     login: state.user.login,
-    error: state.login.error
+    error: state.login.error,
+    isLogin: state.user.authorized
   }));
 
   const callbacks = {
     onUsernameChange: useCallback(login => store.actions.login.setLogin(login), [store]),
     onPasswordChange: useCallback(password => store.actions.login.setPassword(password), [store]),
-    onSubmit: useCallback(() => store.actions.login.login(), [store]),
-
+    onSubmit: useCallback((e) => store.actions.login.login(e), [store]),
   }
   useEffect(()=>{
-    console.log('select.login',select.login)
-    if (select.login) {
+    if (select.isLogin) {
       navigate('/profile')
     }
-  },[select.login])
-
-
+  },[select.isLogin])
 
   return (
-    <PageLayout>
-      <ProfileBar/>
+    <PageLayout >
+      <ProfileBar t={t}/>
       <Head title={t('title')}>
         <LocaleSelect/>
       </Head>

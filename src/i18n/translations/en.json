@@ -21,5 +21,8 @@
   "login.title": "SignIn",
   "login.login": "Login",
   "login.password": "Password",
-  "login.enter": "Enter"
+  "login.enter": "Enter",
+
+  "profileBar.in": "sign In",
+  "profileBar.out": "sign Out"
 }

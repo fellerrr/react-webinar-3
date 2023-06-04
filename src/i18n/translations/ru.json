@@ -23,5 +23,8 @@
   "login.title": "Вход",
   "login.login": "Логин",
   "login.password": "Пароль",
-  "login.enter": "Войти"
+  "login.enter": "Войти",
+
+  "profileBar.in": "Вход",
+  "profileBar.out": "Выход"
 }

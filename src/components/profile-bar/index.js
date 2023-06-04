@@ -1,28 +1,36 @@
 import './style.css'
 import {Link} from "react-router-dom";
+import PropTypes from 'prop-types';
+import {memo} from "react";
+import {cn as bem} from '@bem-react/classname'
 
-const ProfileBar = ({user, login, onLogout}) => {
-  let profile
-  if (user) {
-    profile = user.profile
-  }
-  const name =  profile ? profile.name : ''
-  const title = login ? 'Выход' : 'Вход'
+function ProfileBar({ action, name, link, t }) {
+  const cn = bem('profile');
+
   return (
-    <div className='profile'>
-      {login && <>
-        <Link to='/profile'><span className='profile-name'>{name}</span></Link>
-        <Link to='/'>
-          <button onClick={onLogout}>{title}</button>
-        </Link>
-      </>
-        }
-      {!login && <Link to='/login'>
-                    <button>{title}</button>
-                  </Link>
+    <div className={cn()}>
+      {name ?
+        <>
+          <Link className={cn('name')} to={link}>{name}</Link>
+          <button className={cn('button')} onClick={action}>{t('profileBar.out')}</button>
+        </>
+        : <button className={cn('button')} onClick={action}>{t('profileBar.in')}</button>
       }
     </div>
   );
-};
+}
 
-export default ProfileBar;
+ProfileBar.propTypes = {
+  action: PropTypes.func.isRequired,
+  name: PropTypes.string,
+  link: PropTypes.string,
+  t: PropTypes.func
+}
+
+ProfileBar.defaultProps = {
+  action: () => { },
+  t: (text) => text
+}
+
+
+export default memo(ProfileBar);

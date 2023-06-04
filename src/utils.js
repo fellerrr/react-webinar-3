@@ -38,47 +38,7 @@ export function numberFormat(value, locale = 'ru-RU', options = {}) {
  * Форматирование списка категорий
  * @returns {Array}
  */
-// function flattenArray(arr) {
-//   let flattened = [];
-//   for (const obj of arr) {
-//     const { children, ...rest } = obj;
-//     flattened.push(rest);
-//     if (children && children.length > 0) {
-//       flattened = flattened.concat(flattenArray(children));
-//     }
-//   }
-//   return flattened;
-// }
-// export function formatCategory(arr) {
-//   const hash = {};
-//   const result = [];
-//
-//   for (const obj of arr) {
-//     hash[obj._id] = obj;
-//     obj.children = [];
-//   }
-//
-//   for (const obj of arr) {
-//     if (obj.parent) {
-//       hash[obj.parent._id].children.push(obj);
-//     } else {
-//       result.push(obj);
-//     }
-//   }
-//
-//   const traverse = (obj, level) => {
-//     obj.title = "- ".repeat(level) + obj.title;
-//     for (const child of obj.children) {
-//       traverse(child, level + 1);
-//     }
-//   }
-//
-//   for (const obj of result) {
-//     traverse(obj, 0);
-//   }
-//
-//   return flattenArray(result);
-// }
+
 
 function flattenCategoryArray(categories) {
   let flattened = [];
@@ -96,6 +56,7 @@ function flattenCategoryArray(categories) {
 export function formatCategories(categories) {
   const categoryMap = {};
   const formattedCategories = [];
+  categories = JSON.parse(JSON.stringify(categories));
 
   for (const category of categories) {
     categoryMap[category._id] = category;

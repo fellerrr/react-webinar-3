@@ -7,7 +7,6 @@ class LoginState extends StoreModule {
       login: '',
       password: '',
       error: '',
-      // success: false
     };
   }
 
@@ -31,14 +30,18 @@ class LoginState extends StoreModule {
       error
     });
   }
-  // setSuccess(success) {
-  //   this.setState({
-  //     ...this.getState(),
-  //     success
-  //   });
-  // }
 
-  async login() {
+  clearForm() {
+    this.setState({
+      ...this.getState(),
+      login: '',
+      password: '',
+      error:''
+    });
+  }
+  async login(e) {
+    e.preventDefault()
+    console.log('z pfitk')
     const url = `/api/v1/users/sign`;
     const data = {
       login: this.getState().login,
@@ -51,25 +54,38 @@ class LoginState extends StoreModule {
       },
       body: JSON.stringify(data)
     })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Неверное имя пользователя или пароль');
-        }
-        this.setError('')
-        return response.json();
-      })
+      // .then(async response => {
+      //   if (!response.ok) {
+      //     throw new Error('Неверное имя пользователя или пароль');
+      //   }
+      //   this.setError('')
+      //   return response.json();
+      // })
+      .then(response => response.json())
       .then(responseData => {
         if (responseData.result.token) {
           // Успешная авторизация
-          // this.setSuccess(true)
           localStorage.setItem('token', responseData.result.token);
-          this.store.actions.user.load()
-
+          this.store.actions.user.setAuthorized(true);
         }
       })
       .catch(error => {
         this.setError(error.message)
+        //Там еще есть поле  error.data но она пустая, если там планировалось выводить разные ошибки по факту
+        //то можно их будет перебрать в будущем , а так не допонял.
       });
+  }
+
+  async logout() {
+    console.log('z pfitk fwefwqegqwergqeg gqgerg')
+    await fetch('/api/v1/users/sign', {
+      method: 'DELETE',
+      headers: { "X-Token": localStorage.getItem('token') }
+    });
+
+    localStorage.removeItem('token');
+    this.store.actions.user.setAuthorized(false);
+    this.store.actions.profile.deleteProfile()
   }
 }
 

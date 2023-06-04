@@ -20,7 +20,6 @@ class CatalogState extends StoreModule {
         category: ''
       },
       count: 0,
-      categories: '',
       waiting: false
     }
   }
@@ -104,12 +103,12 @@ class CatalogState extends StoreModule {
 
 
 
-    const category = await fetch('/api/v1/categories?fields=_id,title,parent(_id)&limit=*');
-    const categoryList = await category.json();
-    this.setState({
-      ...this.getState(),
-      categories: categoryList.result.items
-    })
+    // const category = await fetch('/api/v1/categories?fields=_id,title,parent(_id)&limit=*');
+    // const categoryList = await category.json();
+    // this.setState({
+    //   ...this.getState(),
+    //   categories: categoryList.result.items
+    // })
   }
 }
 
