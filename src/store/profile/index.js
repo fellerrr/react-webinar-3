@@ -32,18 +32,8 @@ class ProfileState extends StoreModule {
         this.setState({
           data: json.result,
           waiting: false
-        },
-        //   () => {
-        //   console.log('Загружен профиль пользователя из API');
-        // }
-          'Загружен профиль пользователя из API'
-        );
-
+        },'Загружен профиль пользователя из API');
       }
-      // } else {
-      //   // Обработка ошибки
-      //   throw new Error('Ошибка при загрузке');
-      // }
     } catch (e) {
       // Ошибка при загрузке
       console.log(e.message)

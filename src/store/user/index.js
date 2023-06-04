@@ -1,7 +1,7 @@
 import StoreModule from "../module";
 
 /**
- * Детальная ифнормация о пользователе
+ * Проверка на авторизацию
  */
 class UserState extends StoreModule {
   initState() {
@@ -17,6 +17,7 @@ class UserState extends StoreModule {
   }
   checkAuth() {
     let token = localStorage.getItem('token');
+    // Здесь могла бы быть мощная проверка - не фейковый ли токен в нашем localStorage
     if (token){
       this.setAuthorized(true)
     }

@@ -77,12 +77,10 @@ class LoginState extends StoreModule {
   }
 
   async logout() {
-    console.log('z pfitk fwefwqegqwergqeg gqgerg')
     await fetch('/api/v1/users/sign', {
       method: 'DELETE',
       headers: { "X-Token": localStorage.getItem('token') }
     });
-
     localStorage.removeItem('token');
     this.store.actions.user.setAuthorized(false);
     this.store.actions.profile.deleteProfile()

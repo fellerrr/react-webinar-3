@@ -84,9 +84,6 @@ class CatalogState extends StoreModule {
       fields: 'items(*),count',
       sort: params.sort,
       'search[query]': params.query,
-      // 'search[category]': params.category
-      // 'search[category]': params.category !== '' ? params.category : undefined
-
     };
     if (params.category !== '') {
       apiParams['search[category]'] = params.category;
@@ -100,15 +97,6 @@ class CatalogState extends StoreModule {
       count: json.result.count,
       waiting: false
     }, 'Загружен список товаров из АПИ');
-
-
-
-    // const category = await fetch('/api/v1/categories?fields=_id,title,parent(_id)&limit=*');
-    // const categoryList = await category.json();
-    // this.setState({
-    //   ...this.getState(),
-    //   categories: categoryList.result.items
-    // })
   }
 }
 
