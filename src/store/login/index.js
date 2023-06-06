@@ -40,40 +40,36 @@ class LoginState extends StoreModule {
     });
   }
   async login(e) {
-    e.preventDefault()
-    console.log('z pfitk')
+    e.preventDefault();
     const url = `/api/v1/users/sign`;
     const data = {
       login: this.getState().login,
       password: this.getState().password
     };
-    fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-      // .then(async response => {
-      //   if (!response.ok) {
-      //     throw new Error('Неверное имя пользователя или пароль');
-      //   }
-      //   this.setError('')
-      //   return response.json();
-      // })
-      .then(response => response.json())
-      .then(responseData => {
-        if (responseData.result.token) {
-          // Успешная авторизация
-          localStorage.setItem('token', responseData.result.token);
-          this.store.actions.user.setAuthorized(true);
-        }
-      })
-      .catch(error => {
-        this.setError(error.message)
-        //Там еще есть поле  error.data но она пустая, если там планировалось выводить разные ошибки по факту
-        //то можно их будет перебрать в будущем , а так не допонял.
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
       });
+
+      if (!response.ok) {
+        const responseData = await response.json();
+        const error = responseData.error.data?.issues[0];
+        this.setError(error.message)
+      }
+
+      const responseData = await response.json();
+      if (responseData.result.token) {
+        localStorage.setItem('token', responseData.result.token);
+        this.store.actions.user.setAuthorized(true);
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   async logout() {
