@@ -1,15 +1,22 @@
 import React, { useState } from "react";
+import {cn as bem} from "@bem-react/classname";
+import './style.css'
 
-function CommentForm({ onCommentSubmit }) {
-  const [commentText, setCommentText] = useState("");
+function CommentForm({ onCommentSubmit,
+                       title = 'Новый комментарий',
+                       placeholder= 'Текст',
+                       setShow
+                     }) {
 
+  const [commentText, setCommentText] = useState(placeholder);
+  const cn = bem('NewComment');
   const handleSubmit = (e) => {
     e.preventDefault();
     if (commentText.trim() === "") {
       return; // Не отправляем пустой комментарий
     }
-    onCommentSubmit(commentText); // Вызываем обработчик для отправки комментария
-    setCommentText(""); // Очищаем поле ввода после отправки комментария
+    onCommentSubmit(commentText);
+    setCommentText("");
   };
 
   const handleChange = (e) => {
@@ -17,15 +24,25 @@ function CommentForm({ onCommentSubmit }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div className={cn()}>
+      <form className={cn('form')} onSubmit={handleSubmit}>
+      <span className={cn('title')}>{title}</span>
       <textarea
+        className={cn('textarea')}
         value={commentText}
         onChange={handleChange}
-        placeholder="Напишите комментарий..."
+        rows={5}
       ></textarea>
-      <button type="submit">Отправить</button>
-    </form>
+        <div className={cn('buttonsBlock')}>
+          <button className={cn('button')} type="submit">Отправить</button>
+          {title==='Новый ответ' &&
+            <button className={cn('button')} onClick={()=>setShow(false)}>Отмена</button>
+          }
+        </div>
+      </form>
+    </div>
   );
+
 }
 
 export default CommentForm;

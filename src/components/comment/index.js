@@ -9,13 +9,13 @@ import NeedSign from "../need-sign";
 
 function Comment({comment, answer, style, sign, auth}) {
   const [show, setShow] = useState(false)
-
+  const author = comment.author.profile.name
   const cn = bem('Comment');
   const date = formatDateTime(comment?.dateCreate)
   return (
     <div style={style} className={cn()}>
       <SideLayout side={'start'}>
-        <span className={cn('author')}>{comment.author.profile.name}</span>
+        <span className={cn('author')}>{author}</span>
         <span className={cn('date')}>{date}</span>
       </SideLayout>
       <div className={cn('text')}>{comment.text}</div>
@@ -26,7 +26,13 @@ function Comment({comment, answer, style, sign, auth}) {
         {/*{t('article.add')}*/}
         Ответить
       </span>
-      {show && auth && <CommentForm onCommentSubmit={answer} />}
+      {show && auth &&
+        <CommentForm
+          onCommentSubmit={answer}
+          title='Новый ответ'
+          placeholder={`Мой ответ для ${author}`}
+          setShow={setShow}
+        />}
       {show && !auth &&
         <div className={cn('options')}>
           <NeedSign sign={sign} />
