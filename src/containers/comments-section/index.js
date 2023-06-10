@@ -3,7 +3,7 @@ import {memo, useCallback, useMemo, useState} from "react";
 import {useSelector as useSelectorRedux} from "react-redux/es/hooks/useSelector";
 import shallowequal from "shallowequal";
 import Comment from "../../components/comment";
-import CommentHead from "../../components/commens-head";
+import CommentHead from "../../components/comments-head";
 import listToTree from '../../utils/comments-list-to-tree';
 import treeToList from '../../utils/tree-to-list';
 import list from "../../components/list";
@@ -14,11 +14,13 @@ import useSelector from "../../hooks/use-selector";
 import {useNavigate} from "react-router-dom";
 import NeedSign from "../../components/need-sign";
 import CommentsLayout from "../../components/comments-layout";
+import useTranslate from "../../hooks/use-translate";
 
 
 function CommentsSection({articleId}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {t} = useTranslate();
 
   const auth = useSelector(state => ({
     exists: state.session.exists
@@ -51,7 +53,7 @@ function CommentsSection({articleId}) {
   const [activeId, setActiveId] = useState(null);
   return (
     <>
-      <CommentHead title='Комментарии' count={select.comments?.items?.length}/>
+      <CommentHead title={t('comment.title')} count={select.comments?.items?.length}/>
       {list.map(comment => (
         <Comment
           key={comment.value._id}
@@ -62,12 +64,13 @@ function CommentsSection({articleId}) {
           auth={auth.exists}
           activeId={activeId}
           setActiveId={setActiveId}
+          t={t}
         />
       ))}
       <CommentsLayout>
         {auth.exists
           ? <CommentForm onCommentSubmit={callbacks.sendComment}/>
-          : <NeedSign sign={callbacks.onSignIn}/>
+          : <NeedSign sign={callbacks.onSignIn} action='комментировать'/>
         }
       </CommentsLayout>
     </>

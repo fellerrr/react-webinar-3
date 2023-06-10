@@ -7,7 +7,7 @@ import { formatDateTime} from "../../utils/date-format";
 import CommentForm from "../new-comment";
 import NeedSign from "../need-sign";
 
-function Comment({comment, answer, style, sign, auth, activeId, setActiveId}) {
+function Comment({comment, answer, style, sign, auth, activeId, setActiveId, t}) {
   const handleReply = (id) => {
     setActiveId(id);
   };
@@ -25,20 +25,20 @@ function Comment({comment, answer, style, sign, auth, activeId, setActiveId}) {
         className={cn('answer')}
         onClick={()=>handleReply(comment._id)}
       >
-        {/*{t('article.add')}*/}
-        Ответить
+        {t('comment.answer')}
       </span>
       {activeId === comment._id && auth &&
         <CommentForm
           onCommentSubmit={answer}
-          title='Новый ответ'
-          placeholder={`Мой ответ для ${author}`}
+          titleReply={t('comment.newReplay')}
+          placeholder={`${t('comment.myAnswer')} ${author}`}
           setShow={setActiveId}
+          t={t}
         />}
       {activeId === comment._id && !auth &&
         <div className={cn('options')}>
-          <NeedSign sign={sign} />
-          <span className={cn('cancel')} onClick={() =>setActiveId(null)}> Отмена</span>
+          <NeedSign sign={sign} action='ответить'/>
+          <span className={cn('cancel')} onClick={() =>setActiveId(null)}> {t('comment.cancel')}</span>
         </div>
       }
     </div>
@@ -46,14 +46,29 @@ function Comment({comment, answer, style, sign, auth, activeId, setActiveId}) {
 }
 
 Comment.propTypes = {
-  article: PropTypes.shape({
+  comment: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    author: PropTypes.shape({
+      profile: PropTypes.shape({
+        name: PropTypes.string.isRequired
+      }).isRequired
+    }).isRequired,
+    dateCreate: PropTypes.string,
     text: PropTypes.string
-  })
-
+  }).isRequired,
+  answer: PropTypes.func,
+  style: PropTypes.object,
+  sign: PropTypes.func,
+  auth: PropTypes.bool,
+  activeCommentId: PropTypes.number,
+  setActiveCommentId: PropTypes.func
 };
 
 Comment.defaultProps = {
-
-}
+  style: {},
+  auth: false,
+  activeCommentId: null,
+  setActiveCommentId: () => {}
+};
 
 export default memo(Comment);

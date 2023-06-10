@@ -11,7 +11,6 @@ function reducer(state = initialState, action) {
       return { ...state, comments: {}, waiting: true};
 
     case "comments/load-success":
-      console.log('comments')
       return { ...state, comments: action.payload.comments, waiting: false};
 
     case "comments/load-error":

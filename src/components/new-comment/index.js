@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import {cn as bem} from "@bem-react/classname";
+
 import './style.css'
+import useTranslate from "../../hooks/use-translate";
+
 
 function CommentForm({ onCommentSubmit,
-                       title = 'Новый комментарий',
+                       titleReply,
                        placeholder= 'Текст',
-                       setShow
+                       setShow,
                      }) {
+  const {t} = useTranslate();
+  let title = titleReply ? titleReply : t('comment.newComment')
+
 
   const [commentText, setCommentText] = useState(placeholder);
   const cn = bem('NewComment');
@@ -34,9 +40,9 @@ function CommentForm({ onCommentSubmit,
         rows={5}
       ></textarea>
         <div className={cn('buttonsBlock')}>
-          <button className={cn('button')} type="submit">Отправить</button>
-          {title==='Новый ответ' &&
-            <button className={cn('button')} onClick={()=>setShow(null)}>Отмена</button>
+          <button className={cn('button')} type="submit">{t('comment.submit')}</button>
+          {title===titleReply &&
+            <button className={cn('button')} onClick={()=>setShow(null)}>{t('comment.cancel')}</button>
           }
         </div>
       </form>
