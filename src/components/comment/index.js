@@ -7,7 +7,7 @@ import { formatDateTime} from "../../utils/date-format";
 import CommentForm from "../new-comment";
 import NeedSign from "../need-sign";
 
-function Comment({comment, answer, style, sign, auth, activeId, setActiveId, t}) {
+function Comment({comment, user, answer, style, sign, auth, activeId, setActiveId, t}) {
   const handleReply = (id) => {
     setActiveId(id);
   };
@@ -17,7 +17,7 @@ function Comment({comment, answer, style, sign, auth, activeId, setActiveId, t})
   return (
     <div style={style} className={cn()}>
       <SideLayout side={'start'}>
-        <span className={cn('author')}>{author}</span>
+        <span className={author===user ? cn('user') : cn('author') }>{author}</span>
         <span className={cn('date')}>{date}</span>
       </SideLayout>
       <div className={cn('text')}>{comment.text}</div>

@@ -23,9 +23,11 @@ function CommentsSection({articleId}) {
   const {t} = useTranslate();
 
   const auth = useSelector(state => ({
+    user: state.session.user,
     exists: state.session.exists
   }));
-
+  const user = auth.user?.profile?.name
+  console.log(user)
   const select = useSelectorRedux(state => ({
     comments: state.comments.comments,
   }), shallowequal);
@@ -58,6 +60,7 @@ function CommentsSection({articleId}) {
         <Comment
           key={comment.value._id}
           comment={comment.value}
+          user={user}
           answer={(text) => callbacks.sendAnswer(text, comment.value._id)}
           style={{ paddingLeft: comment.padding || '40px' }}
           sign={callbacks.onSignIn}
