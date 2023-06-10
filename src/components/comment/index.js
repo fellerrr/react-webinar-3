@@ -7,8 +7,10 @@ import { formatDateTime} from "../../utils/date-format";
 import CommentForm from "../new-comment";
 import NeedSign from "../need-sign";
 
-function Comment({comment, answer, style, sign, auth}) {
-  const [show, setShow] = useState(false)
+function Comment({comment, answer, style, sign, auth, activeId, setActiveId}) {
+  const handleReply = (id) => {
+    setActiveId(id);
+  };
   const author = comment.author.profile.name
   const cn = bem('Comment');
   const date = formatDateTime(comment?.dateCreate)
@@ -21,22 +23,22 @@ function Comment({comment, answer, style, sign, auth}) {
       <div className={cn('text')}>{comment.text}</div>
       <span
         className={cn('answer')}
-        onClick={() => setShow(true)}
+        onClick={()=>handleReply(comment._id)}
       >
         {/*{t('article.add')}*/}
         Ответить
       </span>
-      {show && auth &&
+      {activeId === comment._id && auth &&
         <CommentForm
           onCommentSubmit={answer}
           title='Новый ответ'
           placeholder={`Мой ответ для ${author}`}
-          setShow={setShow}
+          setShow={setActiveId}
         />}
-      {show && !auth &&
+      {activeId === comment._id && !auth &&
         <div className={cn('options')}>
           <NeedSign sign={sign} />
-          <span className={cn('cancel')} onClick={() =>setShow(false)}> Отмена</span>
+          <span className={cn('cancel')} onClick={() =>setActiveId(null)}> Отмена</span>
         </div>
       }
     </div>

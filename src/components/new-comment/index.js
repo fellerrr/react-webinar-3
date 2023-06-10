@@ -36,7 +36,7 @@ function CommentForm({ onCommentSubmit,
         <div className={cn('buttonsBlock')}>
           <button className={cn('button')} type="submit">Отправить</button>
           {title==='Новый ответ' &&
-            <button className={cn('button')} onClick={()=>setShow(false)}>Отмена</button>
+            <button className={cn('button')} onClick={()=>setShow(null)}>Отмена</button>
           }
         </div>
       </form>

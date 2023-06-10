@@ -1,4 +1,4 @@
-import {memo, useCallback, useMemo} from "react";
+import {memo, useCallback, useMemo, useState} from "react";
 
 import {useSelector as useSelectorRedux} from "react-redux/es/hooks/useSelector";
 import shallowequal from "shallowequal";
@@ -48,9 +48,7 @@ function CommentsSection({articleId}) {
     return [];
   }, [select.comments]);
 
-
-
-  console.log('list', list);
+  const [activeId, setActiveId] = useState(null);
   return (
     <>
       <CommentHead title='Комментарии' count={select.comments?.items?.length}/>
@@ -62,6 +60,8 @@ function CommentsSection({articleId}) {
           style={{ paddingLeft: comment.padding || '40px' }}
           sign={callbacks.onSignIn}
           auth={auth.exists}
+          activeId={activeId}
+          setActiveId={setActiveId}
         />
       ))}
       <CommentsLayout>
