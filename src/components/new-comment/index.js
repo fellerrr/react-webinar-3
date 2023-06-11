@@ -3,50 +3,56 @@ import {cn as bem} from "@bem-react/classname";
 
 import './style.css'
 import useTranslate from "../../hooks/use-translate";
+import NeedSign from "../need-sign";
 
 
-function CommentForm({ onCommentSubmit,
-                       titleReply,
-                       placeholder= 'Текст',
-                       setShow,
+function CommentForm({ text,
+                       reff,
+                       level,
+                       exists,
+                       onSignIn,
+                       isReply,
+                       onCancel,
+                       send,
+                       onChange
                      }) {
   const {t} = useTranslate();
-  let title = titleReply ? titleReply : t('comment.newComment')
-
-
-  const [commentText, setCommentText] = useState(placeholder);
+  let title = isReply ? 'Новый ответ' : t('comment.newComment')
   const cn = bem('NewComment');
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (commentText.trim() === "") {
-      return; // Не отправляем пустой комментарий
-    }
-    onCommentSubmit(commentText);
-    setCommentText("");
+    send();
   };
 
-  const handleChange = (e) => {
-    setCommentText(e.target.value);
-  };
 
   return (
-    <div className={cn()}>
-      <form className={cn('form')} onSubmit={handleSubmit}>
-      <span className={cn('title')}>{title}</span>
-      <textarea
-        className={cn('textarea')}
-        value={commentText}
-        onChange={handleChange}
-        rows={5}
-      ></textarea>
-        <div className={cn('buttonsBlock')}>
-          <button className={cn('button')} type="submit">{t('comment.submit')}</button>
-          {title===titleReply &&
-            <button className={cn('button')} onClick={()=>setShow(null)}>{t('comment.cancel')}</button>
-          }
-        </div>
-      </form>
-    </div>
+    <>
+      {exists && <div className={cn()} ref={reff} style={{ paddingLeft: 30 * level + 'px' }}>
+        <form className={cn('form')} onSubmit={handleSubmit}>
+          <span className={cn('title')}>{title}</span>
+          <textarea
+            className={cn('textarea')}
+            value={text}
+            onChange={e => onChange(e.target.value)}
+            rows={5}
+          ></textarea>
+          <div className={cn('buttonsBlock')}>
+            <button className={cn('button')} type="submit">{t('comment.submit')}</button>
+            {isReply &&
+              <button className={cn('button')} onClick={onCancel}>{t('comment.cancel')}</button>
+            }
+          </div>
+        </form>
+      </div>}
+      {!exists &&
+        <NeedSign
+          sign={onSignIn} action='комментировать'
+          reff={reff} level={level}
+          isReply={isReply}
+          onCancel={onCancel}
+        />}
+    </>
+
   );
 
 }

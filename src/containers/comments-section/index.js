@@ -1,84 +1,84 @@
-import {memo, useCallback, useMemo, useState} from "react";
-
-import {useSelector as useSelectorRedux} from "react-redux/es/hooks/useSelector";
-import shallowequal from "shallowequal";
-import Comment from "../../components/comment";
-import CommentHead from "../../components/comments-head";
-import listToTree from '../../utils/comments-list-to-tree';
-import treeToList from '../../utils/tree-to-list';
-import list from "../../components/list";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import treeToList from "../../utils/tree-to-list";
+import listToTree from "../../utils/list-to-tree";
 import CommentForm from "../../components/new-comment";
-import commentsActions from "../../store-redux/article-comments/actions";
-import {useDispatch} from "react-redux";
 import useSelector from "../../hooks/use-selector";
 import {useNavigate} from "react-router-dom";
-import NeedSign from "../../components/need-sign";
-import CommentsLayout from "../../components/comments-layout";
-import useTranslate from "../../hooks/use-translate";
+import CommentList from "../../components/comment-list";
+import Comment from '../../components/comment';
 
-
-function CommentsSection({articleId}) {
-  const dispatch = useDispatch();
+const Comlen = ({id,comments,send}) => {
+  const ref = useRef(null);
   const navigate = useNavigate();
-  const {t} = useTranslate();
-
-  const auth = useSelector(state => ({
-    user: state.session.user,
-    exists: state.session.exists
-  }));
-  const user = auth.user?.profile?.name
-  console.log(user)
-  const select = useSelectorRedux(state => ({
-    comments: state.comments.comments,
-  }), shallowequal);
-
+  const { exists, user } = useSelector(state => state.session);
+  const baseComment = { id, parentId: null, text: 'Текст' };
+  const [newComment, setNewComment] = useState({ ...baseComment });
+  const list = useMemo(() => treeToList(
+    listToTree([
+      ...comments,
+      {
+        _type: 'editor',
+        _id: null,
+        text: newComment.text,
+        parent: { _id: newComment.parentId || newComment.id }
+      }
+    ], id),
+    (item, level) => ({ ...item, level })
+  ), [comments, newComment]);
   const callbacks = {
-    sendComment: useCallback((comment) =>
-      dispatch(commentsActions.send(comment, articleId, 'article')), []),
-    sendAnswer: useCallback((comment, parentId) =>
-      dispatch(commentsActions.send(comment, parentId, 'comment')), []),
     onSignIn: useCallback(() => {
       navigate('/login', {state: {back: location.pathname}});
     }, [location.pathname]),
+    onSubmit: useCallback(() => {
+      send(newComment);
+      setNewComment(comment => ({ ...comment, text: '' }));
+    }, [newComment]),
+    onChange: useCallback(text => setNewComment(comment => ({ ...comment, text })), []),
+    onCancel: useCallback(() => setNewComment(baseComment), [baseComment]),
+    onReply: useCallback(
+      (parentId, name) => setNewComment(() => ({ ...baseComment, parentId, text: 'Мой ответ для ' + name })), []),
   }
-  const list = useMemo(() => {
-    if (Object.keys(select.comments).length > 0) {
-      return [
-        ...treeToList(listToTree(select.comments?.items), (item, level) => (
-          {value: item, padding: `${level === 0 ? 40 : level > 7 ? 7 * 30 + 40: level * 30 + 40}px`}
-        ))
-      ];
-    }
-    return [];
-  }, [select.comments]);
+  console.log('list:', list);
+  useEffect(() => {
+    if (!newComment.parentId)
+      return;
+    const nodeOffset = ref.current?.offsetTop;
+    const innerHeight = window.innerHeight;
+    window.scrollTo({ top: nodeOffset - innerHeight / 2, behavior: "smooth" });
+  }, [newComment]);
 
-  const [activeId, setActiveId] = useState(null);
+  const renders = {
+    comment: useCallback(comment => (
+      <Comment
+        key={comment._id}
+        comment={comment}
+        answer={callbacks.onReply}
+        id={comment._id}
+        user={{ name: comment.author?.profile?.name, _id: comment.author?._id }}
+        level={comment.level <= 10 ? comment.level : 10}
+        isUser={user?._id == comment.author?._id}
+      />
+    ), [user]),
+
+    editor: useCallback(editor => (
+      <CommentForm
+        key={editor._id}
+        reff={ref}
+        level={editor.level <= 10 ? editor.level : 10}
+        exists={exists}
+        onSignIn={callbacks.onSignIn}
+        isReply={newComment.parentId ? true : false}
+        onCancel={callbacks.onCancel}
+        send={callbacks.onSubmit}
+        onChange={callbacks.onChange}
+        text={editor.text}
+      />
+    ), [user, newComment])
+  }
+
   return (
-    <>
-      <CommentHead title={t('comment.title')} count={select.comments?.items?.length}/>
-      {list.map(comment => (
-        <Comment
-          key={comment.value._id}
-          comment={comment.value}
-          user={user}
-          answer={(text) => callbacks.sendAnswer(text, comment.value._id)}
-          style={{ paddingLeft: comment.padding || '40px' }}
-          sign={callbacks.onSignIn}
-          auth={auth.exists}
-          activeId={activeId}
-          setActiveId={setActiveId}
-          t={t}
-        />
-      ))}
-      <CommentsLayout>
-        {auth.exists
-          ? <CommentForm onCommentSubmit={callbacks.sendComment}/>
-          : <NeedSign sign={callbacks.onSignIn} action='комментировать'/>
-        }
-      </CommentsLayout>
-    </>
+    <CommentList list={list} comment={renders.comment} editor={renders.editor}/>
   );
+};
 
-}
-
-export default memo(CommentsSection);
+export default Comlen;

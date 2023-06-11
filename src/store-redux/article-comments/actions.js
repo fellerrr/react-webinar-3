@@ -1,42 +1,53 @@
+import simplifyErrors from '../../utils/simplify-errors';
+
 export default {
-  /**
-   * Загрузка товара
-   * @param id
-   * @return {Function}
-   */
+
   load: (id) => {
     return async (dispatch, getState, services) => {
-      dispatch({type: 'comments/load-start'});
+      dispatch({ type: 'comments/load' });
+
       try {
         const res = await services.api.request({
           url: `/api/v1/comments?search[parent]=${id}&limit=*&fields=items(*,author(profile(name)))`
         });
-        dispatch({ type: 'comments/load-success', payload: { comments: res.data.result } });
+
+        if (res.error) {
+          // Ошибка при загрузке
+          dispatch({ type: 'comments/load-error', payload: { error: simplifyErrors(res.error.data.issues) } });
+        } else {
+          dispatch({ type: 'comments/load-success', payload: { data: res.data.result } });
+        }
+
       } catch (e) {
-        dispatch({type: 'comments/load-error'});
+        // Ошибка при загрузке
+        dispatch({ type: 'comments/load-error', payload: { error: e.message } });
       }
-    }
+    };
   },
 
-  send: (comment, id, type) => {
-    console.log('comment to send:', comment)
-    console.log('id to send:', id)
+  send: (comment) => {
+    //console.log('comment to send:', comment)
     return async (dispatch, getState, services) => {
       try {
+        dispatch({ type: 'comments/send' });
+
         const res = await services.api.request({
           url: `/api/v1/comments?fields=*,author(profile(name))`,
           method: 'POST',
           body: JSON.stringify({
-            text: comment,
+            text: comment.text,
             parent: {
-              _id: id,
-              _type: type
+              _id: comment.parentId || comment.id,
+              _type: comment.parentId ? 'comment' : 'article'
             }
           })
         });
+        dispatch({ type: 'comments/send-success', payload: { data: res.data.result } });
+
       } catch (e) {
-        console.log(e)
+        // Ошибка отправки
+        dispatch({ type: 'comments/send-error' });
       }
     }
   },
-}
+};

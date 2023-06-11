@@ -7,6 +7,7 @@
 export default function listToTree(list, key = '_id') {
   let trees = {};
   let roots = {};
+  console.log('list', list)
   for (const item of list) {
     // Добавление элемента в индекс узлов и создание свойства children
     if (!trees[item[key]]) {
